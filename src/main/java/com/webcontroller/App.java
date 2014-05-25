@@ -7,7 +7,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
-
 public class App {
 
     public static String CONFIG_LOCATION = "com.webcontroller.config";
@@ -16,8 +15,8 @@ public class App {
 
         WebAppContext context = new WebAppContext();
         context.setContextPath("/");
-        context.addServlet(new ServletHolder("dispatcher", createDispatcherSerlet()), "/*");
-        context.setResourceBase("webapp");
+        context.addServlet(new ServletHolder("dispatcher", createDispatcherServlet()), "/*");
+        context.setResourceBase("controller");
 
         Server server = new Server(8081);
         server.setHandler(context);
@@ -26,7 +25,7 @@ public class App {
         server.join();
     }
 
-    public static Servlet createDispatcherSerlet() {
+    public static Servlet createDispatcherServlet() {
         DispatcherServlet servlet = new DispatcherServlet();
         servlet.setContextClass(AnnotationConfigWebApplicationContext.class);
         servlet.setContextConfigLocation(CONFIG_LOCATION);

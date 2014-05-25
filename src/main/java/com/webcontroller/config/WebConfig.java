@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -20,7 +21,8 @@ import org.springframework.orm.hibernate4.HibernateTransactionManager;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan("com.webcontroller.controller")
+@ComponentScan({"com.webcontroller.controller", "com.webcontroller.dao"})
+@EnableTransactionManagement
 public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
@@ -32,7 +34,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public DataSource dataSource() {
         SimpleDriverDataSource ds =
-                new SimpleDriverDataSource(org.h2.Driver.load(), "jdbc:h2/tmp/testdb", "sa", "sa");
+                new SimpleDriverDataSource(org.h2.Driver.load(), "jdbc:h2:~/testdb", "sa", "sa");
                 return ds;
     }
     @Bean
@@ -47,7 +49,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     private Properties hibernateProperties() {
         Properties p = new Properties();
         p.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-        p.setProperty("hiberntate.hm2ddl.auto", "update");
+        p.setProperty("hibernate.hbm2ddl.auto", "update");
+        p.setProperty("hibernate.hbm2ddl.import_files_sql_extractor", "org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor");
         return p;
     }
     @Bean
